@@ -27,7 +27,7 @@ export default function Hero() {
       ref={heroRef}
       className="w-full min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_bottom_left,#183EC2,#EAEEFE_100%)] overflow-x-clip"
     >
-      <div className="container min-h-screen pt-16">
+      <div className="container min-h-screen pt-20">
         <SignedOut>
           <div className="md:top-8 md:right-8 mb-20 flex justify-center">
             <Navbar />
@@ -45,14 +45,12 @@ export default function Hero() {
         </SignedIn>
         <div className="md:flex items-center">
           <div className="md:w-[478px]">
-            <div className="tag">Version 2.0 is here</div>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tighter bg-gradient-to-b from-black to-[#001E80] text-transparent bg-clip-text mt-6">
-              This is Enterprise AI.
+              One Solution AI Enterprise Platform
             </h1>
             <p className="text-xl text-[#010D3E] tracking-tight mt-6">
-              Blnc Tech delivers a comprehensive Enterprise AI application
-              development platform and a large and growing family of Worldwide
-              enterprise AI applications
+              All necessary software services in one integrated suite to rapidly
+              develop, provision, and operate Enterprise AI applications
             </p>
             <div className="flex gap-1 items-center mt-[30px]">
               <SignedOut>
@@ -60,10 +58,6 @@ export default function Hero() {
                   <button className="btn btn-primary"> Sign Up</button>
                 </a>
               </SignedOut>
-              <button className="btn btn-text gap-1">
-                <a href="#product">Learn More</a>
-                {/* <ArrowIcon className="h-5 w-5" /> */}
-              </button>
             </div>
           </div>
           <div className="mt-20 md:mt-0 md:h-[648px] md:flex-1 relative">
@@ -86,7 +80,7 @@ export default function Hero() {
               width={220}
               height={220}
               alt="Cylinder Image"
-              className="hidden md:block -top-8 -left-32 md:absolute"
+              className="hidden md:block -top-8 -left-32 md:absolute ml-12"
               style={{
                 translateY: translateY,
               }}

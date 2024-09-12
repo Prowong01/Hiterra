@@ -14,7 +14,7 @@ export default function Navbar({ className }: { className?: string }) {
                 className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50 text-md", className)}
             >
                 <Menu setActive={setActive}>
-                    <MenuItem setActive={setActive} active={active} item="Begin Here!">
+                    <MenuItem setActive={setActive} active={active} item="Begin Your Journey Here!">
                         <div className="  text-sm grid grid-cols-2 gap-10 p-4">
                             <ProductItem
                                 title="Sign Up"
