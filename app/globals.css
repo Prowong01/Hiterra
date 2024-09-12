@@ -103,3 +103,9 @@ html, body {
     --chart-5: 340 75% 55%;
   }
 }
+
+.editable-row .ant-form-item-explain {
+  position: absolute;
+  top: 100%;
+  font-size: 12px;
+}

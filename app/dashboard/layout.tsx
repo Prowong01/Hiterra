@@ -10,9 +10,9 @@ import {
     AppstoreOutlined,
     HomeOutlined,
 } from '@ant-design/icons';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Button, Layout, Menu, theme } from 'antd';
+import { UserButton } from '@clerk/nextjs';
 
 const { Header, Sider, Content } = Layout;
 
@@ -41,7 +41,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}>
-                    <Image
+                    <img
                         src="/logo.png"
                         width={50}
                         height={52}
@@ -106,7 +106,13 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 />
             </Sider>
             <Layout>
-                <Header style={{ padding: 0, background: colorBgContainer }}>
+                <Header style={{
+                    padding: 0,
+                    background: colorBgContainer,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
                     <Button
                         type="text"
                         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -117,6 +123,8 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             height: 64,
                         }}
                     />
+                    <div className='mr-10 mt-4'><UserButton /></div>
+
                 </Header>
                 <Content
                     style={{

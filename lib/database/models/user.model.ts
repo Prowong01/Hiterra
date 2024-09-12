@@ -19,6 +19,12 @@ const UserSchema = new Schema({
   phone: {
     type: String,
   },
+  field: {
+    type: String,
+  },
+  task : {
+    type: String,
+  }
 });
 
 const User = models?.User || model("User", UserSchema);
