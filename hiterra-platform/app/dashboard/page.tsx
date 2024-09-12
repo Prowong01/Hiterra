@@ -1,18 +1,11 @@
-import { auth } from "@clerk/nextjs/server";
-import { getUserById } from "@/lib/actions/user.action";
+import React from 'react';
 
-export default async function DashboardPage() {
-    const { userId } = auth();
-    const user = await getUserById(userId);
-
-    if (!userId || !user) {
-        return <div>You are not logged in</div>;
-    }
-
+const DashboardPage: React.FC = () => {
     return (
         <div>
             <h1>Dashboard</h1>
-            <p>Welcome {user.name}</p>
         </div>
     );
-}
+};
+
+export default DashboardPage;

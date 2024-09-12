@@ -5,8 +5,10 @@ import { twMerge } from "tailwind-merge";
 
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { Toaster } from "react-hot-toast"
+
+import ScrollToTopButton from "../components/ScrollToTopButton";
+import Loader from "../components/Loader";
 
 const dmSans = DM_Sans({ subsets: ["latin"] });
 
@@ -27,18 +29,20 @@ export default function RootLayout({
     <ClerkProvider
       signInFallbackRedirectUrl="/dashboard"
       signUpFallbackRedirectUrl="/"
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string}
     >
       <html lang="en">
         <body className={twMerge(dmSans.className, "antialiased bg-[#EAEEFE]")}>
-          {/* <ClerkLoading>
+          <ClerkLoading>
+            <Loader />
           </ClerkLoading>
-          <ClerkLoaded> */}
-          <AntdRegistry>
-            {children}
-            <ScrollToTopButton />
-            <Toaster />
-          </AntdRegistry>
-          {/* </ClerkLoaded> */}
+          <ClerkLoaded>
+            <AntdRegistry>
+              {children}
+              <ScrollToTopButton />
+              <Toaster />
+            </AntdRegistry>
+          </ClerkLoaded>
         </body>
       </html>
     </ClerkProvider>

@@ -1,19 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import {
   motion,
   useScroll,
   useTransform,
-  useMotionValueEvent,
 } from "framer-motion";
 import { useRef } from "react";
-import { SignedOut } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 // import ArrowIcon from "/assets/arrow-right.svg";
-import cogImage from "@/public/assets/cog.png";
-import cylinderImage from "@/public/assets/cylinder.png";
-import noodleImage from "@/public/assets/noodle.png";
+import cogImage from "../public/assets/cog.png"
+import cylinderImage from "../public/assets/cylinder.png";
+import noodleImage from "../public/assets/noodle.png";
+import Navbar from "../components/NavBar";
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -26,9 +25,24 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="pt-8 pb-20 md:pt-5 md:pb-10 bg-[radial-gradient(ellipse_200%_100%_at_bottom_left,#183EC2,#EAEEFE_100%)] overflow-x-clip"
+      className="w-full min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_bottom_left,#183EC2,#EAEEFE_100%)] overflow-x-clip"
     >
-      <div className="container">
+      <div className="container min-h-screen pt-16">
+        <SignedOut>
+          <div className="md:top-8 md:right-8 mb-20 flex justify-center">
+            <Navbar />
+          </div>
+        </SignedOut>
+        <SignedIn>
+          <div className="md:top-8 md:right-8 mb-12 flex justify-center">
+            <a href="/dashboard">
+              <button className="btn btn-primary px-6 py-2">Go To Dashboard</button>
+            </a>
+            <div className="item-center ml-10 py-2">
+              <UserButton />
+            </div>
+          </div>
+        </SignedIn>
         <div className="md:flex items-center">
           <div className="md:w-[478px]">
             <div className="tag">Version 2.0 is here</div>
