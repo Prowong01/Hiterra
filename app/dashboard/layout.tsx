@@ -70,8 +70,8 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             key: '2',
                             icon: <UserOutlined />,
                             label: (
-                                <Link href="/user">
-                                    User
+                                <Link href="/dashboard/team">
+                                    Team
                                 </Link>
                             ),
                         },
@@ -79,8 +79,8 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             key: '3',
                             icon: <AppstoreOutlined />,
                             label: (
-                                <Link href="/program">
-                                    Program
+                                <Link href="/dashboard/field">
+                                    Field
                                 </Link>
                             ),
                         },
@@ -88,8 +88,8 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             key: '4',
                             icon: <HomeOutlined />,
                             label: (
-                                <Link href="/hotel">
-                                    Hotel
+                                <Link href="/dashboard/task">
+                                    Task
                                 </Link>
                             ),
                         },
@@ -97,8 +97,8 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             key: '5',
                             icon: <SolutionOutlined />,
                             label: (
-                                <Link href="/invoice">
-                                    Invoice
+                                <Link href="/dashboard/analytic">
+                                    Analytic
                                 </Link>
                             ),
                         },
