@@ -1,5 +1,5 @@
 import React from 'react';
-import EditableTable from '../../../components/EditableTable';
+import EditableTable from '../../../components/table/EditableTable';
 import { TaskDataType } from '../../../constants/types';
 
 const Task: React.FC = () => {

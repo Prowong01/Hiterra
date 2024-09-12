@@ -1,6 +1,9 @@
 import React from 'react';
-import EditableTable from '../../../components/EditableTable';
+import EditableTable from '../../../components/table/EditableTable';
 import { UserDataType } from '../../../constants/types';
+
+import AddNewCompany from '../../../components/CreateUserModal';
+import { saveCompany } from '../../../lib/actions/task.action';
 
 const App: React.FC = () => {
     const initialData: UserDataType[] = [
@@ -54,7 +57,7 @@ const App: React.FC = () => {
 
     return (
         <div>
-            <h1>Editable Table Example</h1>
+            <AddNewCompany onSave={saveCompany} />
             <EditableTable<UserDataType> initialData={initialData} columns={columns} />
         </div>
     );

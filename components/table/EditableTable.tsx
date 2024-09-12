@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Table, Form, Typography, Popconfirm } from 'antd';
 import { EditableCell } from './EditableCell';
-import { EditableTableProps } from '../constants/types';
+import { EditableTableProps } from '../../constants/types';
 
 const EditableTable = <T extends { key: string }>({ initialData, columns }: EditableTableProps<T>) => {
     const [form] = Form.useForm();
@@ -44,6 +44,11 @@ const EditableTable = <T extends { key: string }>({ initialData, columns }: Edit
         }
     };
 
+    const handleDelete = (key: string) => {
+        const newData = data.filter((item) => item.key !== key);
+        setData(newData);
+    };
+
     const editableColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -75,9 +80,17 @@ const EditableTable = <T extends { key: string }>({ initialData, columns }: Edit
                     </Popconfirm>
                 </span>
             ) : (
-                <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                    Edit
-                </Typography.Link>
+                <span>
+                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                        Edit
+                    </Typography.Link>
+                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
+                        <Typography.Link style={{ color: 'red', marginLeft: 15 }}>
+                            Delete
+                        </Typography.Link>
+                    </Popconfirm>
+                </span>
+
             );
         },
     };
