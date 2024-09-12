@@ -19,10 +19,6 @@ const UserSchema = new Schema({
   phone: {
     type: String,
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 const User = models?.User || model("User", UserSchema);

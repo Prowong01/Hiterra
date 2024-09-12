@@ -1,4 +1,4 @@
-import { Menu, MenuItem, ProductItem } from "../components/ui/navbar-menu";
+import { Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { useState } from "react";
 import { cn } from "../lib/utils";
 
