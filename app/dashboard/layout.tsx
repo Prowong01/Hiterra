@@ -5,10 +5,11 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     UserOutlined,
-    SolutionOutlined,
+    GoldOutlined,
     DashboardOutlined,
     AppstoreOutlined,
-    HomeOutlined,
+    SnippetsOutlined,
+    DeploymentUnitOutlined
 } from '@ant-design/icons';
 import Link from 'next/link';
 import { Button, Layout, Menu, theme } from 'antd';
@@ -86,7 +87,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         },
                         {
                             key: '4',
-                            icon: <HomeOutlined />,
+                            icon: <SnippetsOutlined />,
                             label: (
                                 <Link href="/dashboard/task">
                                     Task
@@ -95,7 +96,16 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         },
                         {
                             key: '5',
-                            icon: <SolutionOutlined />,
+                            icon: <GoldOutlined />,
+                            label: (
+                                <Link href="/dashboard/product">
+                                    Product
+                                </Link>
+                            ),
+                        },
+                        {
+                            key: '6',
+                            icon: <DeploymentUnitOutlined />,
                             label: (
                                 <Link href="/dashboard/analytic">
                                     Analytic

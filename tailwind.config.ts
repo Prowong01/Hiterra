@@ -64,6 +64,9 @@ const config: Config = {
     }
   },
   plugins: [require("tailwindcss-animate")],
+  corePlugins: {
+    preflight: false, // This is important for Ant Design compatibility
+  },
 };
 
 export default config;
