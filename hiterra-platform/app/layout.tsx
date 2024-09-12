@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import { twMerge } from "tailwind-merge";
+
+import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { Toaster } from "react-hot-toast"
 
-import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
-
-const inter = Inter({ subsets: ["latin"] });
+const dmSans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Hiterra Platform",
@@ -28,16 +29,16 @@ export default function RootLayout({
       signUpFallbackRedirectUrl="/"
     >
       <html lang="en">
-        <body className={inter.className}>
-          <ClerkLoading>
+        <body className={twMerge(dmSans.className, "antialiased bg-[#EAEEFE]")}>
+          {/* <ClerkLoading>
           </ClerkLoading>
-          <ClerkLoaded>
-            <AntdRegistry>
-              {children}
-              <ScrollToTopButton />
-              <Toaster />
-            </AntdRegistry>
-          </ClerkLoaded>
+          <ClerkLoaded> */}
+          <AntdRegistry>
+            {children}
+            <ScrollToTopButton />
+            <Toaster />
+          </AntdRegistry>
+          {/* </ClerkLoaded> */}
         </body>
       </html>
     </ClerkProvider>
