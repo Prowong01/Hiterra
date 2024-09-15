@@ -1,54 +1,65 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Table, Form, Typography, Popconfirm } from 'antd';
+import { Table, Form, Typography, Popconfirm, message  } from 'antd';
 import { EditableCell } from './EditableCell';
 import { EditableTableProps } from '../../constants/types';
 
-const EditableTable = <T extends { key: string }>({ initialData, columns }: EditableTableProps<T>) => {
+const EditableTable = <T extends { _id: string }>({ initialData, columns, onUpdate, onDelete }: EditableTableProps<T>) => {
     const [form] = Form.useForm();
     const [data, setData] = useState(initialData);
     const [editingKey, setEditingKey] = useState('');
 
-    const isEditing = (record: T) => record.key === editingKey;
+    const isEditing = (record: T) => record._id === editingKey;
 
     const edit = (record: T) => {
         form.setFieldsValue({ ...record });
-        setEditingKey(record.key);
+        setEditingKey(record._id);
     };
 
     const cancel = () => {
         setEditingKey('');
     };
 
-    const save = async (key: string) => {
+    const save = async (_id: string) => {
         try {
             const row = await form.validateFields();
             const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
+            const index = newData.findIndex((item) => _id === item._id);
             if (index > -1) {
                 const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row as T);
-                setData(newData);
-                setEditingKey('');
+                const updatedItem = { ...item, ...row };
+                const result = await onUpdate(updatedItem);
+                if (result) {
+                    newData.splice(index, 1, result);
+                    setData(newData);
+                    setEditingKey('');
+                    message.success('User updated successfully');
+                } else {
+                    throw new Error('Failed to update user');
+                }
             }
         } catch (errInfo) {
-            console.log('Validate Failed:', errInfo);
+            console.error('Validate Failed:', errInfo);
+            message.error('Failed to update user');
         }
     };
 
-    const handleDelete = (key: string) => {
-        const newData = data.filter((item) => item.key !== key);
-        setData(newData);
+    const handleDelete = async (id: string) => {
+        try {
+            const deletedUser = await onDelete(id);
+            if (deletedUser) {
+                setData(data.filter(item => item._id !== id));
+                message.success('User deleted successfully');
+            } else {
+                throw new Error('Failed to delete user');
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            message.error('Failed to delete user');
+        }
     };
-
+    
     const editableColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -72,7 +83,7 @@ const EditableTable = <T extends { key: string }>({ initialData, columns }: Edit
             const editable = isEditing(record);
             return editable ? (
                 <span>
-                    <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+                    <Typography.Link onClick={() => save(record._id)} style={{ marginRight: 8 }}>
                         Save
                     </Typography.Link>
                     <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
@@ -84,7 +95,7 @@ const EditableTable = <T extends { key: string }>({ initialData, columns }: Edit
                     <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                         Edit
                     </Typography.Link>
-                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
+                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record._id)}>
                         <Typography.Link style={{ color: 'red', marginLeft: 15 }}>
                             Delete
                         </Typography.Link>
@@ -112,6 +123,7 @@ const EditableTable = <T extends { key: string }>({ initialData, columns }: Edit
                 pagination={{
                     onChange: cancel,
                 }}
+                rowKey="_id"
             />
         </Form>
     );

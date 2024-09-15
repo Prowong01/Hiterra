@@ -1,14 +1,14 @@
-// components/AddNewCompany.tsx
 'use client';
 
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button } from 'antd';
+import { UserInterface } from '../constants/types';
 
-interface AddNewCompanyProps {
-    onSave: (values: { companyName: string; salesOwner: string }) => void;
+interface AddNewUserProps {
+    onSave: (user: UserInterface) => Promise<any>;
 }
 
-const AddNewCompany: React.FC<AddNewCompanyProps> = ({ onSave }) => {
+const AddNewUser: React.FC<AddNewUserProps> = ({ onSave }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
 
@@ -46,18 +46,28 @@ const AddNewCompany: React.FC<AddNewCompanyProps> = ({ onSave }) => {
             >
                 <Form form={form} layout="vertical">
                     <Form.Item
-                        name="companyName"
-                        label="Company name"
-                        rules={[{ required: true, message: 'Please enter company name' }]}
+                        name="email"
+                        label="Email"
+                        rules={[
+                            { required: true, message: 'Please enter email' },
+                            { type: 'email', message: 'Please enter a valid email' }
+                        ]}
                     >
-                        <Input placeholder="Please enter company name" />
+                        <Input placeholder="Please enter email" />
                     </Form.Item>
                     <Form.Item
-                        name="salesOwner"
-                        label="Sales owner"
-                        rules={[{ required: true, message: 'Please enter sales owner' }]}
+                        name="username"
+                        label="Username"
+                        rules={[{ required: true, message: 'Please enter username' }]}
                     >
-                        <Input placeholder="Please enter sales owner" />
+                        <Input placeholder="Please enter username" />
+                    </Form.Item>
+                    <Form.Item
+                        name="phone"
+                        label="Phone"
+                        rules={[{ required: true, message: 'Please enter phone number' }]}
+                    >
+                        <Input placeholder="Please enter phone number" />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -65,4 +75,4 @@ const AddNewCompany: React.FC<AddNewCompanyProps> = ({ onSave }) => {
     );
 };
 
-export default AddNewCompany;
+export default AddNewUser;

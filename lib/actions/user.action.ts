@@ -1,13 +1,25 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-
-import User from "../database/models/user.model";
-// import { UserInterface } from "../../constants/types";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../../lib/utils";
 
-export async function createUser(user: any) {
+import User from "../database/models/user.model";
+import { ClerkUserInterface, UserInterface } from "../../constants/types";
+
+// CREATE
+export async function createClerkUser(user: ClerkUserInterface) {
+  try {
+    await connectToDatabase();
+    const newUser = await User.create(user);
+    
+    return JSON.parse(JSON.stringify(newUser));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+export async function createUser(user: UserInterface) {
   try {
     await connectToDatabase();
     const newUser = await User.create(user);
@@ -18,6 +30,7 @@ export async function createUser(user: any) {
   }
 }
 
+// GET
 export async function getAllUser() {
   try {
     await connectToDatabase();
@@ -31,6 +44,7 @@ export async function getAllUser() {
   }
 }
 
+// GET USER BY ID
 export async function getUserById(clerkId: any) {
   try {
     await connectToDatabase();
@@ -45,11 +59,12 @@ export async function getUserById(clerkId: any) {
   }
 }
 
-export async function updateUser(clerkId: string, user: UserInterface) {
+// UDPATE
+export async function updateUser(user: UserInterface) {
   try {
     await connectToDatabase();
 
-    const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
+    const updatedUser = await User.findByIdAndUpdate(user._id, user, {
       new: true,
     });
 
@@ -61,22 +76,21 @@ export async function updateUser(clerkId: string, user: UserInterface) {
   }
 }
 
-export async function deleteUser(clerkId: string) {
+// DELETE USER
+export async function deleteUser(userId: string) {
   try {
     await connectToDatabase();
 
-    // Find user to delete
-    const userToDelete = await User.findOne({ clerkId });
+    // Delete user directly using _id
+    const deletedUser = await User.findByIdAndDelete(userId);
 
-    if (!userToDelete) {
+    if (!deletedUser) {
       throw new Error("User not found");
     }
 
-    // Delete user
-    const deletedUser = await User.findByIdAndDelete(userToDelete._id);
-    revalidatePath("/");
+    revalidatePath("/dashboard/team");
 
-    return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
+    return JSON.parse(JSON.stringify(deletedUser));
   } catch (error) {
     handleError(error);
   }

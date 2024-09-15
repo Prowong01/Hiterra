@@ -1,18 +1,8 @@
-// EditableCell.tsx
 'use client';
 
 import React from 'react';
 import { Form, Input, InputNumber } from 'antd';
-
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-    editing: boolean;
-    dataIndex: string;
-    title: string;
-    inputType: 'number' | 'text';
-    record: any;
-    index: number;
-    children: React.ReactNode;
-}
+import { EditableCellProps } from '../../constants/types';
 
 export const EditableCell: React.FC<EditableCellProps> = ({
     editing,

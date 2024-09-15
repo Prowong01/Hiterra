@@ -1,66 +1,46 @@
 import React from 'react';
+import { UserInterface } from '../../../constants/types';
+
 import EditableTable from '../../../components/table/EditableTable';
-import { UserDataType } from '../../../constants/types';
+import AddNewUser from '../../../components/CreateUserModal';
 
-import AddNewCompany from '../../../components/CreateUserModal';
-import { saveCompany } from '../../../lib/actions/task.action';
+import { getAllUser, createUser, updateUser, deleteUser } from '../../../lib/actions/user.action';
 
-const App: React.FC = () => {
-    const initialData: UserDataType[] = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Bridge Street',
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sydney No. 1 York Street',
-        },
-    ];
+export default async function Page() {
+    const users: UserInterface[] = await getAllUser();
 
     const columns: Array<{
         title: string;
-        dataIndex: keyof UserDataType;
+        dataIndex: keyof UserInterface;
         width: string;
         editable: boolean;
         inputType?: 'number' | 'text';
     }> = [
             {
-                title: 'Name',
-                dataIndex: 'name',
-                width: '25%',
+                title: 'Username',
+                dataIndex: 'username',
+                width: '30%',
                 editable: true,
             },
             {
-                title: 'Age',
-                dataIndex: 'age',
+                title: 'Email',
+                dataIndex: 'email',
                 width: '15%',
                 editable: true,
-                inputType: 'number',
+                inputType: 'text',
             },
             {
-                title: 'Address',
-                dataIndex: 'address',
-                width: '40%',
+                title: 'Phone',
+                dataIndex: 'phone',
+                width: '15%',
                 editable: true,
             },
-        ];
+         ];
 
     return (
         <div>
-            <AddNewCompany onSave={saveCompany} />
-            <EditableTable<UserDataType> initialData={initialData} columns={columns} />
+            <AddNewUser onSave={createUser} />
+            <EditableTable<UserInterface> initialData={users} columns={columns} onUpdate={updateUser} onDelete={deleteUser}/>
         </div>
     );
 };
-
-export default App;
