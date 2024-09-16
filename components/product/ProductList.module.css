@@ -1,0 +1,60 @@
+.carouselContainer {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.carouselImageContainer {
+    height: 200px;
+}
+
+.carouselImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carouselArrowLeft {
+    left: 10px;
+}
+
+.carouselArrowRight {
+    right: 10px;
+}
+
+.noImagePlaceholder {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    color: #999;
+    font-size: 16px;
+}
+
+.categoryTag {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+}
+
+.stockBadge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.inStock {
+    background-color: #e6f7ff;
+    color: #1890ff;
+}
+
+.outOfStock {
+    background-color: #fff1f0;
+    color: #ff4d4f;
+}

@@ -54,4 +54,5 @@ export interface ProductInterface {
     description?: string;
     category: string;
     photo: string[];
+    quantity: number;
 }

@@ -18,6 +18,10 @@ const ProductSchema = new Schema({
     photo: {
         type: Array,
     },
+    quantity: {
+        type: Number,
+        default: 0,
+    }
 });
 
 const Product = models?.Product || model("Product", ProductSchema);
