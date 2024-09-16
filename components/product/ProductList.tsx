@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { Input, Button, Dropdown, Menu, Popconfirm } from 'antd';
 import { PlusOutlined, EllipsisOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { CompaniesClientProps } from '../app/dashboard/product/page';
+import { CompaniesClientProps } from '../../app/dashboard/product/page';
 
-export default function CompaniesClient({ initialCompanies }: CompaniesClientProps) {
+export default function ProductList({ initialCompanies }: CompaniesClientProps) {
     const [companies, setCompanies] = useState(initialCompanies);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredCompanies, setFilteredCompanies] = useState(initialCompanies);

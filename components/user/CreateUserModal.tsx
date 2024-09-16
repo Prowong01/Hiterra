@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button } from 'antd';
-import { UserInterface } from '../constants/types';
+import { UserInterface } from '../../constants/types';
 
 interface AddNewUserProps {
     onSave: (user: UserInterface) => Promise<any>;

@@ -133,7 +133,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             height: 64,
                         }}
                     />
-                    <div className='mr-10 mt-4'><UserButton /></div>
+                    <div className='mr-10 mt-4'><UserButton showName={true} /></div>
 
                 </Header>
                 <Content

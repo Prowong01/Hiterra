@@ -1,9 +1,9 @@
 import React from 'react';
 import EditableTable from '../../../components/table/EditableTable';
-import { TaskDataType } from '../../../constants/types';
+import { TaskInterface } from '../../../constants/types';
 
 const Task: React.FC = () => {
-    const initialData: TaskDataType[] = [
+    const initialData: TaskInterface[] = [
         {
             key: '1',
             name: 'Task 1',
@@ -32,7 +32,7 @@ const Task: React.FC = () => {
 
     const columns: Array<{
         title: string;
-        dataIndex: keyof TaskDataType;
+        dataIndex: keyof TaskInterface;
         width: string;
         editable: boolean;
         inputType?: 'number' | 'text';
@@ -61,7 +61,7 @@ const Task: React.FC = () => {
     return (
         <div>
             <h1>Editable Table Example</h1>
-            <EditableTable<TaskDataType> initialData={initialData} columns={columns} />
+            <EditableTable<TaskInterface> initialData={initialData} columns={columns} />
         </div>
     );
 };

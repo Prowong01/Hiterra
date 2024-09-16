@@ -2,7 +2,7 @@ import React from 'react';
 import { UserInterface } from '../../../constants/types';
 
 import EditableTable from '../../../components/table/EditableTable';
-import AddNewUser from '../../../components/CreateUserModal';
+import AddNewUser from '../../../components/user/CreateUserModal';
 
 import { getAllUser, createUser, updateUser, deleteUser } from '../../../lib/actions/user.action';
 
@@ -35,12 +35,12 @@ export default async function Page() {
                 width: '15%',
                 editable: true,
             },
-         ];
+        ];
 
     return (
         <div>
             <AddNewUser onSave={createUser} />
-            <EditableTable<UserInterface> initialData={users} columns={columns} onUpdate={updateUser} onDelete={deleteUser}/>
+            <EditableTable<UserInterface> initialData={users} columns={columns} onUpdate={updateUser} onDelete={deleteUser} />
         </div>
     );
 };
