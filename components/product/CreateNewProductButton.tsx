@@ -13,7 +13,7 @@ const CreateNewProductButton = () => {
 
     return (
         <>
-            <Button onClick={showModal}>Add New Product</Button>
+            <Button type="primary" onClick={showModal}>Add New Product</Button>
             <AddNewProduct
                 visible={isModalVisible}
                 onCancel={hideModal}
