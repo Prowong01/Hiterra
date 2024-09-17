@@ -27,6 +27,14 @@ const EditProductDrawer: React.FC<EditProductDrawerProps> = ({ visible, onClose,
     setEditedProduct(prev => ({ ...prev, photo: [...prev.photo, ...urls] }));
   };
 
+  const removePhoto = (indexToRemove: number) => {
+    setUploadedPhotos(prev => prev.filter((_, index) => index !== indexToRemove));
+    setEditedProduct(prev => ({
+      ...prev,
+      photo: prev.photo.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+
   const handleChange = (value: any, fieldName: keyof ProductInterface) => {
     setEditedProduct(prevProduct => ({
       ...prevProduct,
@@ -134,12 +142,22 @@ const EditProductDrawer: React.FC<EditProductDrawerProps> = ({ visible, onClose,
           <FileUploader onFileUpload={handleFileUpload} />
           <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap' }}>
             {uploadedPhotos.map((photo, index) => (
-              <img
-                key={index}
-                src={photo}
-                alt={`Product ${index + 1}`}
-                style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '5px' }}
-              />
+              <div key={index} style={{ position: 'relative', margin: '5px' }}>
+                <img
+                  src={photo}
+                  alt={`Product ${index + 1}`}
+                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                />
+                <Button
+                  type="primary"
+                  danger
+                  size="small"
+                  style={{ position: 'absolute', top: '5px', right: '5px' }}
+                  onClick={() => removePhoto(index)}
+                >
+                  X
+                </Button>
+              </div>
             ))}
           </div>
         </Form.Item>
