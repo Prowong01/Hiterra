@@ -56,3 +56,12 @@ export interface ProductInterface {
     photo: string[];
     stock: number;
 }
+
+export interface EditProductInterface {
+    name: string;
+    price: number;
+    description: string;
+    category: string;
+    photo: string[];
+    stock: number;
+}

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Input, Button, Dropdown, Menu, Popconfirm, Carousel, Select, message } from 'antd';
 import { EllipsisOutlined, EyeOutlined, DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
-import { ProductInterface } from '../../constants/types';
+import { EditProductInterface, ProductInterface } from '../../constants/types';
 import CreateNewProductButton from './CreateNewProductButton';
 import ViewProductDrawer from './ViewProductDrawer';
 import { updateProduct, deleteProduct } from '../../lib/actions/product.action';
@@ -58,11 +58,14 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
         setSelectedProduct(null);
       };
 
-      const handleEdit = async (id: string, updatedData: ProductInterface) => {
+      const handleEdit = async (id: string, updatedData: Partial<EditProductInterface>) => {
         try {
             const updatedProduct = await updateProduct(id, updatedData);
-            setProducts(products.map(p => p._id === id ? updatedProduct : p));
-            setDrawerVisible(false);
+            if (updatedProduct) {
+                message.success('Update Product successfully!')
+                setDrawerVisible(false);
+            }
+            window.location.reload();
         } catch (error) {
             console.error('Failed to update product:', error);
             message.error('Failed to update product');

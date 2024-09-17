@@ -5,7 +5,7 @@ import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../../lib/utils";
 
 import Product from "../database/models/product.model";
-import { ProductInterface } from "../../constants/types";
+import { ProductInterface, EditProductInterface } from "../../constants/types";
 
 export async function createProduct(product: ProductInterface) {
   try {
@@ -50,20 +50,22 @@ export async function getProductById(productId: string) {
   }
 }
 
-export async function updateProduct(productId: string, product: ProductInterface) {
+export async function updateProduct(productId: string, product: Partial<EditProductInterface>) {
   try {
     await connectToDatabase();
 
-    const updatedProduct = await Product.findOneAndUpdate({ productId }, product, {
-      new: true,
-    });
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $set: product },
+      { new: true, runValidators: true }
+    );
 
     if (!updatedProduct) throw new Error("Product update failed");
 
     revalidatePath("/dashboard/product");
     return JSON.parse(JSON.stringify(updatedProduct));
   } catch (error) {
-    handleError(error);
+    console.log(error);
   }
 }
 
