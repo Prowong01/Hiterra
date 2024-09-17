@@ -7,6 +7,7 @@ export default async function ProductPage() {
     const product: ProductInterface[] = await getAllProduct();
     return (
         <div>
+            <h3> Product </h3>
             <ProductList initialData={product} />
         </div>
     );

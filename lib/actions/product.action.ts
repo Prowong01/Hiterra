@@ -11,9 +11,12 @@ export async function createProduct(product: ProductInterface) {
   try {
     await connectToDatabase();
 
-    const newProduct = await Product.create(product);
+    await Product.create(product);
 
-    return JSON.parse(JSON.stringify(newProduct));
+    const allProducts = await Product.find();
+
+    revalidatePath("/dashboard/product");
+    return JSON.parse(JSON.stringify(allProducts));
   } catch (error) {
     handleError(error);
   }
@@ -26,6 +29,7 @@ export async function getAllProduct() {
     const product = await Product.find();
     if (!Product) throw new Error("Product not found");
 
+    revalidatePath("/dashboard/product");
     return JSON.parse(JSON.stringify(product));
   } catch (error) {
     handleError(error);
@@ -56,26 +60,26 @@ export async function updateProduct(productId: string, product: ProductInterface
 
     if (!updatedProduct) throw new Error("Product update failed");
 
+    revalidatePath("/dashboard/product");
     return JSON.parse(JSON.stringify(updatedProduct));
   } catch (error) {
     handleError(error);
   }
 }
 
-export async function deleteHotel(productId: string) {
+export async function deleteProduct(productId: string) {
   try {
     await connectToDatabase();
 
-    const ProductToDelete = await Product.findOne({ productId });
+    const deletedProduct = await Product.findByIdAndDelete(productId);
 
-    if (!ProductToDelete) {
-      throw new Error("Hotel not found");
+    if (!deletedProduct) {
+      throw new Error("Product not found");
     }
 
-    const deletedProduct = await Product.findByIdAndDelete(ProductToDelete._id);
     revalidatePath("/dashboard/product");
 
-    return deletedProduct ? JSON.parse(JSON.stringify(deletedProduct)) : null;
+    return JSON.parse(JSON.stringify(deletedProduct));
   } catch (error) {
     handleError(error);
   }

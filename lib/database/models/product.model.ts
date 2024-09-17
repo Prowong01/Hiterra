@@ -18,7 +18,7 @@ const ProductSchema = new Schema({
     photo: {
         type: Array,
     },
-    quantity: {
+    stock: {
         type: Number,
         default: 0,
     }

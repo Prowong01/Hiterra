@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Modal, Form, Input, InputNumber, Select, Button, message } from 'antd';
+import { Modal, Form, Input, InputNumber, Select, Button, message, Row, Col } from 'antd';
 
 import { ProductInterface } from '../../constants/types';
 import { FileUploader } from '../FileUploader'
@@ -68,29 +68,35 @@ const AddNewProduct: React.FC<AddNewProductProps> = ({ visible, onCancel, onSave
                         <Input placeholder="Please enter product name" />
                     </Form.Item>
                     <Form.Item
-                        name="price"
-                        label="Price"
-                        rules={[{ required: true, message: 'Please enter price' }]}
-                    >
-                        <InputNumber style={{ width: '100%' }} min={0} />
-                    </Form.Item>
-                    <Form.Item
                         name="description"
-                        label="Description"
+                        label="Product Description"
                     >
                         <Input.TextArea rows={4} placeholder="Please enter product description" />
                     </Form.Item>
-                    <Form.Item
-                        name="category"
-                        label="Category"
-                        rules={[{ required: true, message: 'Please select category' }]}
-                    >
-                        <Select placeholder="Please select a category">
-                            <Select.Option value="electronics">Electronics</Select.Option>
-                            <Select.Option value="clothing">Clothing</Select.Option>
-                            <Select.Option value="books">Books</Select.Option>
-                        </Select>
-                    </Form.Item>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                            name="category"
+                            label="Category"
+                            rules={[{ required: true, message: 'Please select category' }]}
+                            >
+                            <Select placeholder="Please select a category">
+                                <Select.Option value="electronics">Electronics</Select.Option>
+                                <Select.Option value="clothing">Clothing</Select.Option>
+                                <Select.Option value="books">Books</Select.Option>
+                            </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                            name="price"
+                            label="Price"
+                            rules={[{ required: true, message: 'Please enter price' }]}
+                            >
+                            <InputNumber style={{ width: '100%' }} min={0} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
                     <Form.Item label="Photos">
                         <FileUploader onFileUpload={handleFileUpload} />
                         {uploadedPhotos.length > 0 && (
@@ -103,6 +109,13 @@ const AddNewProduct: React.FC<AddNewProductProps> = ({ visible, onCancel, onSave
                                 ))}
                             </div>
                         )}
+                    </Form.Item>
+                    <Form.Item
+                        name="stock"
+                        label="Stock"
+                        rules={[{ required: true, message: 'Please enter the amount of stock' }]}
+                        >
+                        <InputNumber style={{ width: '100%' }} min={0} />
                     </Form.Item>
                 </Form>
             </Modal>

@@ -12,7 +12,7 @@ export async function createClerkUser(user: ClerkUserInterface) {
   try {
     await connectToDatabase();
     const newUser = await User.create(user);
-    
+
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);
@@ -24,6 +24,7 @@ export async function createUser(user: UserInterface) {
     await connectToDatabase();
     const newUser = await User.create(user);
 
+    revalidatePath("/dashboard/team");
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);
@@ -70,6 +71,7 @@ export async function updateUser(user: UserInterface) {
 
     if (!updatedUser) throw new Error("User update failed");
 
+    revalidatePath("/dashboard/team");
     return JSON.parse(JSON.stringify(updatedUser));
   } catch (error) {
     handleError(error);

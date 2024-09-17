@@ -15,11 +15,9 @@ export function FileUploader({ onFileUpload }: FileUploaderProps) {
                     if (Array.isArray(res)) {
                         const fileUrls = res.map(file => file.url);
                         onFileUpload(fileUrls);
-                        alert("Upload Completed");
                     }
                 }}
                 onUploadError={(error: Error) => {
-                    // Do something with the error.
                     alert(`ERROR! ${error.message}`);
                 }}
             />
