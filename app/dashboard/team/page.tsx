@@ -6,7 +6,7 @@ import AddNewUser from '../../../components/user/CreateUserModal';
 
 import { getAllUser, createUser, updateUser, deleteUser } from '../../../lib/actions/user.action';
 
-export default async function Page() {
+export default async function TeamPage() {
     const users: UserInterface[] = await getAllUser();
 
     const columns: Array<{

@@ -1,69 +1,18 @@
 import React from 'react';
-import EditableTable from '../../../components/table/EditableTable';
 import { TaskInterface } from '../../../constants/types';
+import TaskList from '../../../components/task/TaskList';
 
-const Task: React.FC = () => {
-    const initialData: TaskInterface[] = [
-        {
-            key: '1',
-            name: 'Task 1',
-            status: 'In Progress',
-            cycle: 1,
-            createdAt: new Date('2023-05-01T09:00:00'),
-            updatedAt: new Date('2023-05-01T10:30:00')
-        },
-        {
-            key: '2',
-            name: 'Task 2',
-            status: 'Completed',
-            cycle: 2,
-            createdAt: new Date('2023-04-28T14:00:00'),
-            updatedAt: new Date('2023-04-30T16:45:00')
-        },
-        {
-            key: '3',
-            name: 'Task 3',
-            status: 'Pending',
-            cycle: 0,
-            createdAt: new Date('2023-05-02T11:15:00'),
-            updatedAt: new Date('2023-05-02T11:15:00')
-        }
-    ];
+import AddNewTask from '../../../components/task/CreateTaskModal';
+import { getAllTasks, createTask, updateTask, deleteTask } from '../../../lib/actions/task.action';
 
-    const columns: Array<{
-        title: string;
-        dataIndex: keyof TaskInterface;
-        width: string;
-        editable: boolean;
-        inputType?: 'number' | 'text';
-    }> = [
-            {
-                title: 'Name',
-                dataIndex: 'name',
-                width: '25%',
-                editable: true,
-            },
-            {
-                title: 'Status',
-                dataIndex: 'status',
-                width: '15%',
-                editable: true,
-                inputType: 'number',
-            },
-            {
-                title: 'Cycle',
-                dataIndex: 'cycle',
-                width: '40%',
-                editable: true,
-            },
-        ];
+export default async function TaskPage() {
+    const task: TaskInterface[] = await getAllTasks();
 
     return (
         <div>
-            <h1>Editable Table Example</h1>
-            <EditableTable<TaskInterface> initialData={initialData} columns={columns} />
+            <h1>Task</h1>
+            <AddNewTask onSave={createTask} />
+            <TaskList tasks={task} onUpdate={updateTask} onDelete={deleteTask} />
         </div>
     );
 };
-
-export default Task;

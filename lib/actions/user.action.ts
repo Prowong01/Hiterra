@@ -46,7 +46,7 @@ export async function getAllUser() {
 }
 
 // GET USER BY ID
-export async function getUserById(clerkId: any) {
+export async function getUserById(clerkId: string) {
   try {
     await connectToDatabase();
 

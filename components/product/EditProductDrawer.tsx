@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, Form, Input, Select, Button, message, Radio, InputNumber } from 'antd';
+import { Drawer, Form, Input, Select, Button, message, InputNumber } from 'antd';
 import { ProductInterface, EditProductInterface } from '../../constants/types';
 import { FileUploader } from '../FileUploader';
 
