@@ -144,7 +144,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
                 text
             ),
     });
-    
+
     const isEditing = (record: TaskInterface) => record._id === editingKey;
 
     const edit = (record: Partial<TaskInterface> & { _id: string }) => {
@@ -255,6 +255,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
             dataIndex: 'updatedAt',
             width: '15%',
             editable: false,
+            render: (date: string) => dayjs(date).format('YYYY-MM-DD HH:mm:ss'),
         },
         {
             title: 'Action',
