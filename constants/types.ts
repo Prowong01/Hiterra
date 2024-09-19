@@ -1,24 +1,10 @@
 import { Types } from 'mongoose';
 
-export interface EditableTableProps<T extends { _id: string }> {
-    initialData: T[];
-    columns: {
-        title: string;
-        dataIndex: string;
-        width?: string;
-        editable?: boolean;
-        inputType?: 'number' | 'text' | 'select';
-        options?: { value: string; label: string }[];
-    }[];
-    onUpdate: (record: T) => Promise<T | null>;
-    onDelete: (id: string) => Promise<T | null>;
-}
-
-export interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+export interface TeamTableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
     dataIndex: string;
     title: string;
-    inputType: 'number' | 'text' | 'select';
+    inputType: 'number' | 'text';
     children: React.ReactNode;
 }
 
@@ -27,8 +13,6 @@ export interface TaskTableCellProps extends React.HTMLAttributes<HTMLElement> {
     dataIndex: string;
     title: string;
     inputType: 'text' | 'textarea' | 'date' | 'select';
-    record: TaskInterface;
-    index: number;
     children: React.ReactNode;
 }
 

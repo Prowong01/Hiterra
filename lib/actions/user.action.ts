@@ -46,11 +46,11 @@ export async function getAllUser() {
 }
 
 // GET USER BY ID
-export async function getUserById(clerkId: string) {
+export async function getUserById(userId: string) {
   try {
     await connectToDatabase();
 
-    const user = await User.findOne({ clerkId: clerkId });
+    const user = await User.findOne({ _id: userId });
 
     if (!user) throw new Error("User not found");
 
@@ -61,13 +61,24 @@ export async function getUserById(clerkId: string) {
 }
 
 // UDPATE
-export async function updateUser(user: UserInterface) {
+export async function updateUser(user: Partial<UserInterface>) {
   try {
     await connectToDatabase();
 
-    const updatedUser = await User.findByIdAndUpdate(user._id, user, {
-      new: true,
-    });
+    if (!user._id) {
+      throw new Error("User ID is required for update");
+    }
+
+    const { _id, ...updateData } = user;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { $set: updateData },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     if (!updatedUser) throw new Error("User update failed");
 

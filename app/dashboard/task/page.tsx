@@ -12,7 +12,11 @@ export default async function TaskPage() {
         <div>
             <h1>Task</h1>
             <AddNewTask onSave={createTask} />
-            <TaskList tasks={task} onUpdate={updateTask} onDelete={deleteTask} />
+            <TaskList
+                tasks={task}
+                onUpdate={updateTask}
+                onDelete={deleteTask}
+            />
         </div>
     );
 };

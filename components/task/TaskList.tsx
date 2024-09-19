@@ -1,22 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Form, Input, DatePicker, Select, Table, Typography, Popconfirm, message, Tag, Button, Space } from 'antd';
-import { EyeOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { Form, Input, DatePicker, Select, Table, Typography, Popconfirm, message, Tag } from 'antd';
+import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { TablePaginationConfig } from 'antd/es/table';
 import { FilterValue } from 'antd/es/table/interface';
 import dayjs from 'dayjs';
+import ColumnSearch from '../ColumnSearch';
 
-import { TaskTableCellProps } from '../../constants/types';
-import { TaskInterface } from '../../constants/types';
+import { TaskInterface, TaskTableCellProps } from '../../constants/types';
 
 const EditableCell: React.FC<TaskTableCellProps> = ({
     editing,
     dataIndex,
     title,
     inputType,
-    // record,
-    // index,
     children,
     ...restProps
 }) => {
@@ -85,65 +83,10 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
     const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
     const [filteredData, setFilteredData] = useState<TaskInterface[]>(tasks);
     const [editingKey, setEditingKey] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
 
     useEffect(() => {
         setFilteredData(tasks);
     }, [tasks]);
-
-    const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
-        const searchText = selectedKeys[0];
-        confirm();
-        setSearchedColumn(dataIndex);
-
-        const filtered = tasks.filter((item) =>
-            item[dataIndex as keyof TaskInterface]
-                .toString()
-                .toLowerCase()
-                .includes(searchText.toLowerCase())
-        );
-        setFilteredData(filtered);
-    };
-
-    const handleReset = (clearFilters: () => void) => {
-        clearFilters();
-        setFilteredData(tasks);
-    };
-
-    const getColumnSearchProps = (dataIndex: string) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
-            <div style={{ padding: 8 }}>
-                <Input
-                    placeholder={`Search ${dataIndex}`}
-                    value={selectedKeys[0]}
-                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-                    style={{ width: 188, marginBottom: 8, display: 'block' }}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90 }}
-                    >
-                        Search
-                    </Button>
-                    <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                        Reset
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        render: (text: string) =>
-            searchedColumn === dataIndex ? (
-                <Typography.Text>{text}</Typography.Text>
-            ) : (
-                text
-            ),
-    });
 
     const isEditing = (record: TaskInterface) => record._id === editingKey;
 
@@ -205,14 +148,14 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
             dataIndex: 'taskName',
             width: '15%',
             editable: true,
-            ...getColumnSearchProps('taskName'),
+            ...ColumnSearch<TaskInterface>({ dataIndex: 'taskName', title: 'Task Name' }),
         },
         {
             title: 'Description',
             dataIndex: 'taskDescription',
             width: '25%',
             editable: true,
-            ...getColumnSearchProps('taskDescription'),
+            ...ColumnSearch<TaskInterface>({ dataIndex: 'taskDescription', title: 'Description' }),
         },
         {
             title: 'Date',
@@ -333,4 +276,5 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
         </Form>
     );
 };
+
 export default TaskList;

@@ -14,10 +14,10 @@ import styles from './ProductList.module.css';
 const { Option } = Select;
 
 const categories = [
-  { name: 'All Categories', icon: '🛒' },
-  { name: 'electronics', icon: '📱' },
-  { name: 'clothing', icon: '👕' },
-  { name: 'books', icon: '📚' },
+    { name: 'All Categories', icon: '🛒' },
+    { name: 'electronics', icon: '📱' },
+    { name: 'clothing', icon: '👕' },
+    { name: 'books', icon: '📚' },
 ];
 
 interface ProductListProps {
@@ -51,14 +51,14 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
     const showDrawer = (product: ProductInterface) => {
         setSelectedProduct(product);
         setDrawerVisible(true);
-      };
-      
-      const handleCloseDrawer = () => {
+    };
+
+    const handleCloseDrawer = () => {
         setDrawerVisible(false);
         setSelectedProduct(null);
-      };
+    };
 
-      const handleEdit = async (id: string, updatedData: Partial<EditProductInterface>) => {
+    const handleEdit = async (id: string, updatedData: Partial<EditProductInterface>) => {
         try {
             const updatedProduct = await updateProduct(id, updatedData);
             if (updatedProduct) {
@@ -93,7 +93,7 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
                 <Popconfirm
                     title="Are you sure you want to delete this product?"
                     onConfirm={() => handleDelete(product._id)}
-                    okText="Yes" 
+                    okText="Yes"
                     cancelText="No"
                 >
                     <div>Delete Product</div>
@@ -107,7 +107,7 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
             <div className="flex justify-between items-center mb-6">
                 <CreateNewProductButton />
                 <div className="flex items-center space-x-4">
-                <Select
+                    <Select
                         style={{ width: 200 }}
                         placeholder="Select a category"
                         onChange={handleCategoryChange}
@@ -173,7 +173,7 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
                         <div className="mt-4 flex justify-between items-center">
                             <div className={styles.categoryTag}>
                                 <span role="img" aria-label={product.category}>
-                                {categories.find(cat => cat.name === product.category)?.icon || '🛒'}
+                                    {categories.find(cat => cat.name === product.category)?.icon || '🛒'}
                                 </span>
                                 <span>{product.category}</span>
                             </div>
