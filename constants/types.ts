@@ -64,3 +64,26 @@ export interface TaskInterface {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface FieldInterface {
+    _id?: string;
+    fieldName: string;
+    cropType?: string;
+    location?: {
+        coordinates?: [number, number];
+        address?: string;
+    };
+    pic?: Types.ObjectId | string;
+    size?: {
+        value: number;
+        unit: 'hectares' | 'acres' | 'square meters';
+    };
+    status?: string;
+    image?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface EditFieldInterface extends Omit<FieldInterface, 'pic' | '_id' | 'createdAt' | 'updatedAt'> {
+    pic?: string;
+  }

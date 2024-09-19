@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Table, Form, Typography, Popconfirm, message, Input, InputNumber } from 'antd';
-import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EyeOutlined, EditOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
 import { UserInterface, TeamTableCellProps } from '../../constants/types';
 import ColumnSearch from '../ColumnSearch';
 
@@ -59,6 +59,26 @@ const TeamList: React.FC<EditTeamTableProps> = ({ initialUsers, onUpdate, onDele
     };
 
     const columns = [
+        {
+            title: 'No.',
+            dataIndex: 'index',
+            width: '5%',
+            render: (_: number, __: number, index: number) => index + 1,
+        },
+        {
+            title: 'Avatar',
+            dataIndex: 'photo',
+            width: '3%',
+            render: (photo: string) => (
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    {photo ? (
+                        <img src={photo} alt="Avatar" className="w-full h-full object-cover rounded-full" />
+                    ) : (
+                        <span> <UserOutlined /></span>
+                    )}
+                </div>
+            ),
+        },
         {
             title: 'Username',
             dataIndex: 'username',
@@ -178,7 +198,6 @@ const TeamList: React.FC<EditTeamTableProps> = ({ initialUsers, onUpdate, onDele
                         cell: TeamTableCell,
                     },
                 }}
-                bordered
                 dataSource={users}
                 columns={mergedColumns}
                 rowClassName="editable-row"

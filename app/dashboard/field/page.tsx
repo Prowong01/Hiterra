@@ -1,10 +1,14 @@
-import React from 'react'
-import FileUploader from '../../../components/FileUploader'
+import { FieldInterface } from "../../../constants/types";
 
-const Field = () => {
+import FieldList from "../../../components/field/FieldList";
+import { getAllFields } from "../../../lib/actions/field.action";
+
+export default async function FieldPage() {
+    const field: FieldInterface[] = await getAllFields();
     return (
-        <div><FileUploader /></div>
-    )
+        <div>
+            <h1> Field </h1>
+            <FieldList />
+        </div>
+    );
 }
-
-export default Field

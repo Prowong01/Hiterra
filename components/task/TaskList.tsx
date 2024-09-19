@@ -323,7 +323,6 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
                         cell: EditableCell,
                     },
                 }}
-                bordered
                 dataSource={filteredData}
                 columns={mergedColumns}
                 rowClassName="editable-row"
