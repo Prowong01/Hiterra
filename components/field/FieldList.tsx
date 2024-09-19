@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Select, Card, Row, Col, Pagination, Spin, message } from 'antd';
-import { PlusOutlined, SearchOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined } from '@ant-design/icons';
 import { FieldInterface } from '../../constants/types';
 import AddFieldModal from './AddFieldModal';
 import Image from 'next/image';
@@ -119,83 +119,83 @@ const FieldList = () => {
                         onCancel={handleCancel}
                         onAdd={handleAdd}
                     />
-            </Col>
-            <Col>
-                <Search
-                    placeholder="Search fields"
-                    onSearch={handleSearch}
-                    style={{ width: 200, marginRight: 16 }}
-                />
-                <Select
-                    defaultValue="all"
-                    style={{ width: 120 }}
-                    onChange={handleStatusChange}
-                >
-                    <Option value="all">All Status</Option>
-                    <Option value="active">Active</Option>
-                    <Option value="inactive">Inactive</Option>
-                </Select>
-            </Col>
-        </Row>
+                </Col>
+                <Col>
+                    <Search
+                        placeholder="Search fields"
+                        onSearch={handleSearch}
+                        style={{ width: 200, marginRight: 16 }}
+                    />
+                    <Select
+                        defaultValue="all"
+                        style={{ width: 120 }}
+                        onChange={handleStatusChange}
+                    >
+                        <Option value="all">All Status</Option>
+                        <Option value="active">Active</Option>
+                        <Option value="inactive">Inactive</Option>
+                    </Select>
+                </Col>
+            </Row>
 
             {
-        loading ? (
-            <div style={{ textAlign: 'center', padding: '50px' }}>
-                <Spin size="large" />
-            </div>
-        ) : error ? (
-            <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
-                {error}
-            </div>
-        ) : (
-            <>
-                <Row gutter={[16, 16]}>
-                    {paginatedFields.map((field) => (
-                        <Col xs={24} sm={12} md={8} lg={6} key={field._id}>
-                            <Card
-                                hoverable
-                                cover={
-                                    <div style={{ height: 200, position: 'relative' }}>
-                                        <Image
-                                            src={field.image || '/default-field-image.png'}
-                                            alt={`Map of ${field.fieldName}`}
-                                            layout="fill"
-                                            objectFit="cover"
+                loading ? (
+                    <div style={{ textAlign: 'center', padding: '50px' }}>
+                        <Spin size="large" />
+                    </div>
+                ) : error ? (
+                    <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
+                        {error}
+                    </div>
+                ) : (
+                    <>
+                        <Row gutter={[16, 16]}>
+                            {paginatedFields.map((field) => (
+                                <Col xs={24} sm={12} md={8} lg={6} key={field._id}>
+                                    <Card
+                                        hoverable
+                                        cover={
+                                            <div style={{ height: 200, position: 'relative' }}>
+                                                <Image
+                                                    src={field.image || '/default-field-image.png'}
+                                                    alt={`Map of ${field.fieldName}`}
+                                                    layout="fill"
+                                                    objectFit="cover"
+                                                />
+                                            </div>
+                                        }
+                                        actions={[
+                                            <Button key="edit" type="link">Edit</Button>,
+                                            <Button key="delete" type="link" danger>Delete</Button>,
+                                        ]}
+                                    >
+                                        <Card.Meta
+                                            title={field.fieldName}
+                                            description={
+                                                <>
+                                                    <p><EnvironmentOutlined /> {field.location?.address}</p>
+                                                    <p>Status: <span style={{ color: field.status === 'active' ? 'green' : 'red' }}>{field.status}</span></p>
+                                                </>
+                                            }
                                         />
-                                    </div>
-                                }
-                                actions={[
-                                    <Button key="edit" type="link">Edit</Button>,
-                                    <Button key="delete" type="link" danger>Delete</Button>,
-                                ]}
-                            >
-                                <Card.Meta
-                                    title={field.fieldName}
-                                    description={
-                                        <>
-                                            <p><EnvironmentOutlined /> {field.location?.address}</p>
-                                            <p>Status: <span style={{ color: field.status === 'active' ? 'green' : 'red' }}>{field.status}</span></p>
-                                        </>
-                                    }
-                                />
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-                <Row justify="end" style={{ marginTop: 16 }}>
-                    <Pagination
-                        current={currentPage}
-                        pageSize={pageSize}
-                        total={filteredFields.length}
-                        onChange={handlePageChange}
-                        showSizeChanger
-                        showQuickJumper
-                        showTotal={(total) => `Total ${total} items`}
-                    />
-                </Row>
-            </>
-        )
-    }
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Row>
+                        <Row justify="end" style={{ marginTop: 16 }}>
+                            <Pagination
+                                current={currentPage}
+                                pageSize={pageSize}
+                                total={filteredFields.length}
+                                onChange={handlePageChange}
+                                showSizeChanger
+                                showQuickJumper
+                                showTotal={(total) => `Total ${total} items`}
+                            />
+                        </Row>
+                    </>
+                )
+            }
         </div >
     );
 };
