@@ -22,6 +22,7 @@ function ColumnSearch<T extends object>({ dataIndex, title }: ColumnSearchProps<
     const handleReset = (clearFilters: () => void) => {
         clearFilters();
         setSearchText('');
+        setSearchedColumn('');
     };
 
     const getStringValue = (value: any): string => {
@@ -65,7 +66,7 @@ function ColumnSearch<T extends object>({ dataIndex, title }: ColumnSearchProps<
         ),
         onFilter: (value, record) => {
             const recordValue = getStringValue(record[dataIndex]);
-            return recordValue.toLowerCase().includes((value as string).toLowerCase());
+            return recordValue.match(new RegExp(value as string, 'i')) !== null;
         },
         render: (text) =>
             searchedColumn === dataIndex ? (
