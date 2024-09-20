@@ -40,14 +40,6 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
         setFilteredProducts(results);
     }, [products, searchTerm, selectedCategory]);
 
-    const handleSearch = (value: string) => {
-        setSearchTerm(value);
-    };
-
-    const handleCategoryChange = (value: string) => {
-        setSelectedCategory(value);
-    };
-
     const showDrawer = (product: ProductInterface) => {
         setSelectedProduct(product);
         setDrawerVisible(true);
@@ -110,7 +102,7 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
                     <Select
                         style={{ width: 200 }}
                         placeholder="Select a category"
-                        onChange={handleCategoryChange}
+                        onChange={(value) => { setSelectedCategory(value) }}
                         value={selectedCategory}
                     >
                         {categories.map((category) => (
@@ -122,7 +114,7 @@ const ProductList: React.FC<ProductListProps> = ({ initialData }) => {
                     <Input.Search
                         placeholder="Search by name"
                         style={{ width: 250 }}
-                        onChange={(e) => handleSearch(e.target.value)}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         value={searchTerm}
                     />
                 </div>

@@ -1,11 +1,13 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Select, Card, Row, Col, Pagination, Spin, message } from 'antd';
-import { EnvironmentOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import { FieldInterface } from '../../constants/types';
-import AddFieldModal from './AddFieldModal';
-import Image from 'next/image';
+
+import FieldFormModal from './FieldFormModal';
+import DeleteFieldModal from './DeleteFieldModal';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -24,6 +26,8 @@ const FieldList: React.FC<FieldListProps> = ({
     deleteField
 }) => {
     const [fields, setFields] = useState<FieldInterface[]>(initialFields);
+    const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
+    const [fieldToEdit, setFieldToEdit] = useState<FieldInterface | undefined>(undefined);
 
     // Search and Filter
     const [filteredFields, setFilteredFields] = useState<FieldInterface[]>([]);
@@ -37,6 +41,10 @@ const FieldList: React.FC<FieldListProps> = ({
     // Pagination
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(12);
+
+    // Delete
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState<boolean>(false);
+    const [fieldToDelete, setFieldToDelete] = useState<{ id: string; name: string } | null>(null);
 
     // Filter and search fields
     useEffect(() => {
@@ -67,24 +75,37 @@ const FieldList: React.FC<FieldListProps> = ({
         }
     };
 
-    const handleEdit = async (id: string, updatedField: Partial<FieldInterface>) => {
+    const handleEdit = async (updatedField: FieldInterface) => {
         try {
-            const updated = await updateField(id, updatedField);
-            setFields(prevFields => prevFields.map(field => field._id === id ? updated : field));
+            const updated = await updateField(updatedField._id as string, updatedField);
+            setFields(prevFields => prevFields.map(field => field._id === updated._id ? updated : field));
+            setIsModalVisible(false);
             message.success('Field updated successfully');
         } catch (error) {
+            console.error('Failed to update field:', error);
             message.error('Failed to update field. Please try again.');
         }
     };
 
-    const handleDelete = async (id: string) => {
-        try {
-            await deleteField(id);
-            setFields(prevFields => prevFields.filter(field => field._id !== id));
-            message.success('Field deleted successfully');
-        } catch (error) {
-            message.error('Failed to delete field. Please try again.');
+    const handleDelete = (fieldId: string, fieldName: string) => {
+        setFieldToDelete({ id: fieldId, name: fieldName });
+        setIsDeleteModalVisible(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (fieldToDelete) {
+            try {
+                await deleteField(fieldToDelete.id);
+                message.success('Field deleted successfully');
+                setFields(fields.filter(field => field._id !== fieldToDelete.id));
+                setFilteredFields(filteredFields.filter(field => field._id !== fieldToDelete.id));
+            } catch (error) {
+                console.error('Failed to delete field:', error);
+                message.error('Failed to delete field. Please try again.');
+            }
         }
+        setIsDeleteModalVisible(false);
+        setFieldToDelete(null);
     };
 
     const handlePageChange = (page: number, pageSize: number) => {
@@ -101,11 +122,13 @@ const FieldList: React.FC<FieldListProps> = ({
         <div>
             <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>
                 <Col>
-                    <Button onClick={() => { setIsModalVisible(true) }}>Add New Field</Button>
-                    <AddFieldModal
+                    <Button onClick={() => { setIsModalVisible(true); setModalMode('add'); }}>Add New Field</Button>
+                    <FieldFormModal
                         visible={isModalVisible}
                         onCancel={() => setIsModalVisible(false)}
-                        onAdd={handleAdd}
+                        onSubmit={modalMode === 'add' ? handleAdd : handleEdit}
+                        initialValues={modalMode === 'edit' ? fieldToEdit : undefined}
+                        mode={modalMode}
                     />
                 </Col>
                 <Col>
@@ -137,20 +160,32 @@ const FieldList: React.FC<FieldListProps> = ({
                             {paginatedFields.map((field) => (
                                 <Col xs={24} sm={12} md={8} lg={6} key={field._id}>
                                     <Card
+                                        loading={loading}
                                         hoverable
                                         cover={
                                             <div style={{ height: 200, position: 'relative' }}>
                                                 <Image
                                                     src={field.image[0] || '/default-field-image.png'}
                                                     alt={`Map of ${field.fieldName}`}
-                                                    layout="fill"
-                                                    objectFit="cover"
+                                                    fill
+                                                    style={{ objectFit: 'cover' }}
                                                 />
                                             </div>
                                         }
                                         actions={[
-                                            <Button key="edit" type="link" onClick={() => handleEdit(field._id, field)}>Edit</Button>,
-                                            <Button key="delete" type="link" danger onClick={() => handleDelete(field._id)}>Delete</Button>,
+                                            <Button key="view" type="link" onClick={() => handleEdit(field._id as string, field)}><EyeOutlined /></Button>,
+                                            <Button
+                                                key="edit"
+                                                type="link"
+                                                onClick={() => {
+                                                    setFieldToEdit(field);
+                                                    setModalMode('edit');
+                                                    setIsModalVisible(true);
+                                                }}
+                                            >
+                                                <EditOutlined />
+                                            </Button>,
+                                            <Button key="delete" type="link" danger onClick={() => handleDelete(field._id as string, field.fieldName)}><DeleteOutlined /></Button>,
                                         ]}
                                     >
                                         <Card.Meta
@@ -177,6 +212,13 @@ const FieldList: React.FC<FieldListProps> = ({
                                 showTotal={(total) => `Total ${total} items`}
                             />
                         </Row>
+
+                        <DeleteFieldModal
+                            visible={isDeleteModalVisible}
+                            onCancel={() => setIsDeleteModalVisible(false)}
+                            onConfirm={handleConfirmDelete}
+                            fieldName={fieldToDelete?.name || ''}
+                        />
                     </>
                 )
             }
