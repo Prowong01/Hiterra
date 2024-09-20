@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, InputNumber, Upload, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+
 import { FileUploader } from '../FileUploader';
-import { FieldInterface } from '../../constants/types';
+import { FieldInterface, UserInterface } from '../../constants/types';
 import MapComponent from '../Map';
+
+import { getAllUser } from '../../lib/actions/user.action';
 
 const { Option } = Select;
 
@@ -14,8 +19,26 @@ interface AddFieldModalProps {
 }
 
 const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd }) => {
+    const [users, setUsers] = useState<UserInterface>([]);
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+    useEffect(() => {
+        if (visible) {
+            fetchUsers();
+        }
+    }, [visible]);
+
+    const fetchUsers = async () => {
+        try {
+            const fetchedUsers = await getAllUser();
+
+            setUsers(fetchedUsers);
+        } catch (error) {
+            console.error('Failed to fetch users:', error);
+            message.error('Failed to load users. Please try again.');
+        }
+    };
 
     const handleImageUpload = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
         setFileList(newFileList);
@@ -57,7 +80,7 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd 
 
     return (
         <Modal
-            visible={visible}
+            open={visible}
             title="Add New Field"
             okText="Add"
             cancelText="Cancel"
@@ -141,10 +164,9 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd 
                             rules={[{ required: true, message: 'Please select the person in charge' }]}
                         >
                             <Select>
-                                {/* You'll need to fetch and populate this list with actual user data */}
-                                <Option value="user1Id">User 1 Name</Option>
-                                <Option value="user2Id">User 2 Name</Option>
-                                {/* Add more options as needed */}
+                                {users.map(user => (
+                                    <Option key={user._id} value={user._id}>{user.name}</Option>
+                                ))}
                             </Select>
                         </Form.Item>
 

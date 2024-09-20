@@ -5,8 +5,6 @@ import { twMerge } from "tailwind-merge";
 
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { Toaster } from "react-hot-toast"
-
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import Loader from "../components/Loader";
 
@@ -40,7 +38,6 @@ export default function RootLayout({
             <AntdRegistry>
               {children}
               <ScrollToTopButton />
-              <Toaster />
             </AntdRegistry>
           </ClerkLoaded>
         </body>
