@@ -124,7 +124,7 @@ const FieldFormModal: React.FC<FieldFormModalProps> = ({
             onOk={handleSubmit}
             width={1200}
         >
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: '35px' }}>
                 <div style={{ width: '45%' }}>
                     <Form form={form} layout="horizontal">
                         <Form.Item

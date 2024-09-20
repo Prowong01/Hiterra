@@ -87,13 +87,13 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect, initialLo
     }, [isMapLoaded, onLocationSelect]);
 
     return (
-        <div style={{ position: 'relative', width: '100%', height: '400px' }}>
+        <div style={{ position: 'relative', width: '100%', height: '600px' }}>
             <div ref={geocoderContainerRef} style={{ position: 'absolute', top: 10, left: 10, zIndex: 1 }} />
             <Map
                 ref={mapRef}
                 mapboxAccessToken='pk.eyJ1IjoicHJvd29uZyIsImEiOiJjbTEzbmY0ajAwcTA1MnNxMWsyY2RwZGF3In0.1qBSnkB_sKp4KNVcpDbdtw'
                 {...viewport}
-                style={{ width: '100%', height: '100%' }}
+                style={{ width: '100%', height: '100%', marginBottom: 20 }}
                 mapStyle="mapbox://styles/mapbox/streets-v11"
                 mapLib={mapboxgl}
                 aria-label="Interactive map"
