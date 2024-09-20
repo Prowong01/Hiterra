@@ -46,19 +46,19 @@ const FieldList: React.FC<FieldListProps> = ({
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState<boolean>(false);
     const [fieldToDelete, setFieldToDelete] = useState<{ id: string; name: string } | null>(null);
 
+    const filterFields = (fields: FieldInterface[], status: string, search: string) => {
+        return fields.filter(field => 
+            (status === 'all' || field.status === status) &&
+            (search === '' || 
+             field.fieldName.toLowerCase().includes(search.toLowerCase()) ||
+             field.location?.address?.toLowerCase().includes(search.toLowerCase()))
+        );
+    };
+
     // Filter and search fields
     useEffect(() => {
         setLoading(true);
-        let result = fields;
-        if (statusFilter !== 'all') {
-            result = result.filter(field => field.status === statusFilter);
-        }
-        if (searchTerm) {
-            result = result.filter(field =>
-                field.fieldName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                field.location?.address?.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
+        const result = filterFields(fields, statusFilter, searchTerm);
         setFilteredFields(result);
         setCurrentPage(1);
         setLoading(false);
@@ -173,7 +173,9 @@ const FieldList: React.FC<FieldListProps> = ({
                                             </div>
                                         }
                                         actions={[
-                                            <Button key="view" type="link" onClick={() => handleEdit(field._id as string, field)}><EyeOutlined /></Button>,
+                                            // <Button key="view" type="link" onClick={() => handleEdit(field._id as string)}>
+                                            //     <EyeOutlined />
+                                            // </Button>,
                                             <Button
                                                 key="edit"
                                                 type="link"

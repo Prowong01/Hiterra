@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, InputNumber, message, Avatar, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 import { FileUploader } from '../FileUploader';
 import { FieldInterface, UserInterface } from '../../constants/types';
@@ -30,20 +31,30 @@ const FieldFormModal: React.FC<FieldFormModalProps> = ({
     const [users, setUsers] = useState<UserInterface[]>([]);
     const [form] = Form.useForm();
     const [upLoadedImage, setUploadedImage] = useState<string[]>([]);
+    const [initialLocation, setInitialLocation] = useState<[number, number] | null>(null);
 
     useEffect(() => {
         if (visible) {
             fetchUsers();
             if (mode === 'edit' && initialValues) {
+                const lat = initialValues.location.coordinates[1];
+                const lng = initialValues.location.coordinates[0];
+                setInitialLocation([lng, lat]);
+
                 form.setFieldsValue({
                     ...initialValues,
                     latitude: initialValues.location.coordinates[1],
                     longitude: initialValues.location.coordinates[0],
+                    address: initialValues.location.address,
+                    plantingDate: moment(initialValues.plantingDate).format('YYYY-MM-DD'),
+                    harvestDate: moment(initialValues.harvestDate).format('YYYY-MM-DD'),
+                    pic: initialValues.pic._id,
                 });
                 setUploadedImage(initialValues.image || []);
             } else {
                 form.resetFields();
                 setUploadedImage([]);
+                setInitialLocation(null);
             }
         }
     }, [visible, mode, initialValues, form]);
@@ -54,11 +65,9 @@ const FieldFormModal: React.FC<FieldFormModalProps> = ({
             if (Array.isArray(fetchedUsers as UserInterface)) {
                 setUsers(fetchedUsers);
             } else {
-                console.error('Unexpected response format from getAllUser');
                 message.error('Failed to load users. Unexpected data format.');
             }
         } catch (error) {
-            console.error('Failed to fetch users:', error);
             message.error('Failed to load users. Please try again.');
         }
     };
@@ -236,7 +245,7 @@ const FieldFormModal: React.FC<FieldFormModalProps> = ({
                     </Form>
                 </div>
                 <div style={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <MapComponent onLocationSelect={handleLocationSelect} />
+                    <MapComponent onLocationSelect={handleLocationSelect} initialLocation={initialLocation}/>
                 </div>
             </div>
         </Modal>

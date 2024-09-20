@@ -9,9 +9,10 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 interface MapComponentProps {
     onLocationSelect: (lat: number, lng: number) => void;
+    initialLocation: [number, number] | null;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect }) => {
+const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect, initialLocation  }) => {
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [marker, setMarker] = useState<[number, number] | null>(null);
     const [viewport, setViewport] = useState({
@@ -22,6 +23,17 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect }) => {
 
     const mapRef = useRef<MapRef>(null);
     const geocoderContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (initialLocation) {
+            setMarker(initialLocation);
+            setViewport({
+                longitude: initialLocation[0],
+                latitude: initialLocation[1],
+                zoom: 12
+            });
+        }
+    }, [initialLocation]);
 
     const handleMapClick = useCallback((event: mapboxgl.MapLayerMouseEvent) => {
         const [lng, lat] = event.lngLat.toArray();
@@ -41,7 +53,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect }) => {
             setViewport(prev => ({ ...prev }));
 
             geocoder.on('result', (e: any) => {
-                console.log('result', e)
                 const { center, bbox } = e.result;
                 // setMarker(center);
                 // onLocationSelect(center[1], center[0]);
@@ -100,12 +111,11 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect }) => {
                             width: 20,
                             height: 20,
                             borderRadius: '50%',
-                            backgroundColor: 'red',
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
                             color: 'white',
-                            fontSize: '12px'
+                            fontSize: '25px'
                         }}>
                             📍
                         </div>
