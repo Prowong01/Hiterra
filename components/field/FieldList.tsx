@@ -10,51 +10,37 @@ import Image from 'next/image';
 const { Search } = Input;
 const { Option } = Select;
 
-const FieldList = () => {
-    const [fields, setFields] = useState<FieldInterface[]>([]);
+interface FieldListProps {
+    initialFields: FieldInterface[];
+    createField: (field: FieldInterface) => Promise<FieldInterface>;
+    updateField: (id: string, field: Partial<FieldInterface>) => Promise<FieldInterface>;
+    deleteField: (id: string) => Promise<void>;
+}
+
+const FieldList: React.FC<FieldListProps> = ({
+    initialFields,
+    createField,
+    updateField,
+    deleteField
+}) => {
+    const [fields, setFields] = useState<FieldInterface[]>(initialFields);
+
+    // Search and Filter
     const [filteredFields, setFilteredFields] = useState<FieldInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
+
+    // Modal and Loading
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+
+    // Pagination
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(12);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
-    // Fetch fields data
-    useEffect(() => {
-        const fetchFields = async () => {
-            try {
-                setLoading(true);
-                // Replace this with your actual API call
-                // const response = await fetch('/api/fields');
-                // const data: FieldInterface[] = await response.json();
-                // setFields(data);
-
-                // Dummy data for example
-                const dummyData: FieldInterface[] = Array(50).fill(null).map((_, index) => ({
-                    _id: `field_${index + 1}`,
-                    fieldName: `Field ${index + 1}`,
-                    location: {
-                        address: `${index + 100} Farm Road, Cityville, State ${index % 50 + 1}`,
-                    },
-                    status: index % 3 === 0 ? 'active' : 'inactive',
-                    image: `/path-to-map-image-${index + 1}.png`,
-                }));
-                setFields(dummyData);
-            } catch (err) {
-                setError('Failed to fetch fields. Please try again later.');
-                message.error('Failed to fetch fields. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchFields();
-    }, []);
 
     // Filter and search fields
     useEffect(() => {
+        setLoading(true);
         let result = fields;
         if (statusFilter !== 'all') {
             result = result.filter(field => field.status === statusFilter);
@@ -66,37 +52,39 @@ const FieldList = () => {
             );
         }
         setFilteredFields(result);
-        setCurrentPage(1); // Reset to first page when filters change
+        setCurrentPage(1);
+        setLoading(false);
     }, [fields, statusFilter, searchTerm]);
 
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-
-    const handleAdd = async (values: Partial<FieldInterface>) => {
+    const handleAdd = async (values: Omit<FieldInterface, '_id'>) => {
         try {
-            // Here you would typically make an API call to add the new field
-            // For example:
-            // await addField(values);
-            console.log('New field added:', values);
+            const newField = await createField(values);
+            setFields(prevFields => [...prevFields, newField]);
             setIsModalVisible(false);
-            // You might want to refresh your field list here
+            message.success('Field added successfully');
         } catch (error) {
-            console.error('Error adding field:', error);
-            // Handle error (e.g., show error message to user)
+            message.error('Failed to add field. Please try again.');
         }
     };
 
-    const handleSearch = (value: string) => {
-        setSearchTerm(value);
+    const handleEdit = async (id: string, updatedField: Partial<FieldInterface>) => {
+        try {
+            const updated = await updateField(id, updatedField);
+            setFields(prevFields => prevFields.map(field => field._id === id ? updated : field));
+            message.success('Field updated successfully');
+        } catch (error) {
+            message.error('Failed to update field. Please try again.');
+        }
     };
 
-    const handleStatusChange = (value: string) => {
-        setStatusFilter(value);
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteField(id);
+            setFields(prevFields => prevFields.filter(field => field._id !== id));
+            message.success('Field deleted successfully');
+        } catch (error) {
+            message.error('Failed to delete field. Please try again.');
+        }
     };
 
     const handlePageChange = (page: number, pageSize: number) => {
@@ -113,23 +101,23 @@ const FieldList = () => {
         <div>
             <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>
                 <Col>
-                    <Button onClick={showModal}>Add New Field</Button>
+                    <Button onClick={() => { setIsModalVisible(true) }}>Add New Field</Button>
                     <AddFieldModal
                         visible={isModalVisible}
-                        onCancel={handleCancel}
+                        onCancel={() => setIsModalVisible(false)}
                         onAdd={handleAdd}
                     />
                 </Col>
                 <Col>
                     <Search
                         placeholder="Search fields"
-                        onSearch={handleSearch}
+                        onSearch={(value) => { setSearchTerm(value); }}
                         style={{ width: 200, marginRight: 16 }}
                     />
                     <Select
                         defaultValue="all"
                         style={{ width: 120 }}
-                        onChange={handleStatusChange}
+                        onChange={(value) => { setStatusFilter(value); }}
                     >
                         <Option value="all">All Status</Option>
                         <Option value="active">Active</Option>
@@ -143,10 +131,6 @@ const FieldList = () => {
                     <div style={{ textAlign: 'center', padding: '50px' }}>
                         <Spin size="large" />
                     </div>
-                ) : error ? (
-                    <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
-                        {error}
-                    </div>
                 ) : (
                     <>
                         <Row gutter={[16, 16]}>
@@ -157,7 +141,7 @@ const FieldList = () => {
                                         cover={
                                             <div style={{ height: 200, position: 'relative' }}>
                                                 <Image
-                                                    src={field.image || '/default-field-image.png'}
+                                                    src={field.image[0] || '/default-field-image.png'}
                                                     alt={`Map of ${field.fieldName}`}
                                                     layout="fill"
                                                     objectFit="cover"
@@ -165,8 +149,8 @@ const FieldList = () => {
                                             </div>
                                         }
                                         actions={[
-                                            <Button key="edit" type="link">Edit</Button>,
-                                            <Button key="delete" type="link" danger>Delete</Button>,
+                                            <Button key="edit" type="link" onClick={() => handleEdit(field._id, field)}>Edit</Button>,
+                                            <Button key="delete" type="link" danger onClick={() => handleDelete(field._id)}>Delete</Button>,
                                         ]}
                                     >
                                         <Card.Meta

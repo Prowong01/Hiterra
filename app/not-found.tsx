@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
 import { Button, Result } from 'antd';
 
 export default function NotFound() {

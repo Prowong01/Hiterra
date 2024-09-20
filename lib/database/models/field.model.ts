@@ -1,4 +1,5 @@
 import { Schema, model, models } from "mongoose";
+import User from "./user.model";
 
 const FieldSchema = new Schema({
   fieldName: {
@@ -22,37 +23,25 @@ const FieldSchema = new Schema({
   },
   pic: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: User,
   },
   details: {
     type: String,
     trim: true
   },
-  size: {
-    value: {
-      type: Number,
-      min: 0
-    },
-    unit: {
-      type: String,
-      enum: ['hectares', 'acres', 'square meters'],
-      default: 'hectares'
-    }
-  },
   status: {
     type: String,
   },
   image: {
-    type: String, // URL to the uploaded image
+    type: Array,
     trim: true
   },
-  createdAt: {
+  plantingDate: {
     type: Date,
     default: Date.now
   },
-  updatedAt: {
+  harvestDate: {
     type: Date,
-    default: Date.now
   }
 });
 

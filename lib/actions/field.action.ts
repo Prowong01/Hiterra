@@ -5,7 +5,7 @@ import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../../lib/utils";
 
 import Field from "../database/models/field.model";
-import { FieldInterface, EditFieldInterface } from "../../constants/types";
+import { FieldInterface } from "../../constants/types";
 
 export async function createField(field: FieldInterface) {
   try {
@@ -48,7 +48,7 @@ export async function getFieldById(fieldId: string) {
   }
 }
 
-export async function updateField(fieldId: string, field: Partial<EditFieldInterface>) {
+export async function updateField(fieldId: string, field: Partial<FieldInterface>) {
   try {
     await connectToDatabase();
 
@@ -86,73 +86,72 @@ export async function deleteField(fieldId: string) {
 }
 
 export async function getFieldsByPIC(userId: string) {
-    try {
-      await connectToDatabase();
-  
-      const fields = await Field.find({ pic: userId }).populate('pic', 'username email');
-  
-      if (!fields) throw new Error("No fields found for this user");
-  
-      return JSON.parse(JSON.stringify(fields));
-    } catch (error) {
-      handleError(error);
-    }
+  try {
+    await connectToDatabase();
+
+    const fields = await Field.find({ pic: userId }).populate('pic', 'username email');
+
+    if (!fields) throw new Error("No fields found for this user");
+
+    return JSON.parse(JSON.stringify(fields));
+  } catch (error) {
+    handleError(error);
   }
-  
-  export async function getFieldsByCropType(cropType: string) {
-    try {
-      await connectToDatabase();
-  
-      const fields = await Field.find({ cropType }).populate('pic', 'username email');
-  
-      if (!fields) throw new Error("No fields found with this crop type");
-  
-      return JSON.parse(JSON.stringify(fields));
-    } catch (error) {
-      handleError(error);
-    }
+}
+
+export async function getFieldsByCropType(cropType: string) {
+  try {
+    await connectToDatabase();
+
+    const fields = await Field.find({ cropType }).populate('pic', 'username email');
+
+    if (!fields) throw new Error("No fields found with this crop type");
+
+    return JSON.parse(JSON.stringify(fields));
+  } catch (error) {
+    handleError(error);
   }
-  
-  export async function updateFieldStatus(fieldId: string, status: 'active' | 'inactive' | 'maintenance') {
-    try {
-      await connectToDatabase();
-  
-      const updatedField = await Field.findByIdAndUpdate(
-        fieldId,
-        { $set: { status } },
-        { new: true, runValidators: true }
-      ).populate('pic', 'username email');
-  
-      if (!updatedField) throw new Error("Field status update failed");
-  
-      revalidatePath("/dashboard/field");
-      return JSON.parse(JSON.stringify(updatedField));
-    } catch (error) {
-      handleError(error);
-    }
+}
+
+export async function updateFieldStatus(fieldId: string, status: 'active' | 'inactive' | 'maintenance') {
+  try {
+    await connectToDatabase();
+
+    const updatedField = await Field.findByIdAndUpdate(
+      fieldId,
+      { $set: { status } },
+      { new: true, runValidators: true }
+    ).populate('pic', 'username email');
+
+    if (!updatedField) throw new Error("Field status update failed");
+
+    revalidatePath("/dashboard/field");
+    return JSON.parse(JSON.stringify(updatedField));
+  } catch (error) {
+    handleError(error);
   }
-  
-  export async function recordFieldInspection(fieldId: string, notes: string) {
-    try {
-      await connectToDatabase();
-  
-      const updatedField = await Field.findByIdAndUpdate(
-        fieldId,
-        { 
-          $set: { 
-            lastInspection: new Date(),
-            notes: notes
-          } 
-        },
-        { new: true, runValidators: true }
-      ).populate('pic', 'username email');
-  
-      if (!updatedField) throw new Error("Field inspection record failed");
-  
-      revalidatePath("/dashboard/field");
-      return JSON.parse(JSON.stringify(updatedField));
-    } catch (error) {
-      handleError(error);
-    }
+}
+
+export async function recordFieldInspection(fieldId: string, notes: string) {
+  try {
+    await connectToDatabase();
+
+    const updatedField = await Field.findByIdAndUpdate(
+      fieldId,
+      {
+        $set: {
+          lastInspection: new Date(),
+          notes: notes
+        }
+      },
+      { new: true, runValidators: true }
+    ).populate('pic', 'username email');
+
+    if (!updatedField) throw new Error("Field inspection record failed");
+
+    revalidatePath("/dashboard/field");
+    return JSON.parse(JSON.stringify(updatedField));
+  } catch (error) {
+    handleError(error);
   }
-  
+}

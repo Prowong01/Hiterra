@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Select, InputNumber, Upload, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Select, InputNumber, message, Avatar, Button } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 import { FileUploader } from '../FileUploader';
 import { FieldInterface, UserInterface } from '../../constants/types';
@@ -15,13 +15,13 @@ const { Option } = Select;
 interface AddFieldModalProps {
     visible: boolean;
     onCancel: () => void;
-    onAdd: (field: Partial<FieldInterface>) => void;
+    onAdd: (field: FieldInterface) => void;
 }
 
 const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd }) => {
     const [users, setUsers] = useState<UserInterface>([]);
     const [form] = Form.useForm();
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [upLoadedImage, setUploadedImage] = useState<string[]>([]);
 
     useEffect(() => {
         if (visible) {
@@ -32,16 +32,24 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd 
     const fetchUsers = async () => {
         try {
             const fetchedUsers = await getAllUser();
-
-            setUsers(fetchedUsers);
+            if (Array.isArray(fetchedUsers as UserInterface)) {
+                setUsers(fetchedUsers);
+            } else {
+                console.error('Unexpected response format from getAllUser');
+                message.error('Failed to load users. Unexpected data format.');
+            }
         } catch (error) {
             console.error('Failed to fetch users:', error);
             message.error('Failed to load users. Please try again.');
         }
     };
 
-    const handleImageUpload = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
-        setFileList(newFileList);
+    const handleFileUpload = (urls: string[]) => {
+        setUploadedImage(prev => [...prev, ...urls]);
+    };
+
+    const removeImage = (index: number) => {
+        setUploadedImage(prev => prev.filter((_, i) => i !== index));
     };
 
     const handleLocationSelect = (lat: number, lng: number) => {
@@ -54,26 +62,24 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd 
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const newField: Partial<FieldInterface> = {
+            const newField: FieldInterface = {
                 ...values,
                 location: {
                     type: 'Point',
                     coordinates: [values.longitude, values.latitude],
                     address: values.address,
                 },
-                image: fileList[0]?.response?.url || null, // Assuming your server returns the image URL
+                image: upLoadedImage
             };
             onAdd(newField);
             form.resetFields();
-            setFileList([]);
         } catch (error) {
-            console.error('Validation failed:', error);
+            message.error(`Failed to add field:, ${error}`);
         }
     };
 
     const handleCancel = () => {
         form.resetFields();
-        setFileList([]);
         onCancel();
     };
 
@@ -139,14 +145,6 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd 
                         </Form.Item>
 
                         <Form.Item
-                            name="size"
-                            label="Size (in hectares)"
-                            rules={[{ required: true, message: 'Please enter the field size' }]}
-                        >
-                            <InputNumber min={0} step={0.01} />
-                        </Form.Item>
-
-                        <Form.Item
                             name="status"
                             label="Status"
                             rules={[{ required: true, message: 'Please select the field status' }]}
@@ -165,7 +163,14 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd 
                         >
                             <Select>
                                 {users.map(user => (
-                                    <Option key={user._id} value={user._id}>{user.name}</Option>
+                                    <Option key={user._id} value={user._id}>
+                                        <Avatar
+                                            icon={!user.photo && <UserOutlined />}
+                                            src={user.photo ? user.photo : undefined}
+                                            style={{ marginRight: 8 }}
+                                        />
+                                        {user.username}
+                                    </Option>
                                 ))}
                             </Select>
                         </Form.Item>
@@ -187,37 +192,25 @@ const AddFieldModal: React.FC<AddFieldModalProps> = ({ visible, onCancel, onAdd 
                         </Form.Item>
 
                         <Form.Item
-                            name="expectedHarvestDate"
+                            name="harvestDate"
                             label="Expected Harvest Date"
                             rules={[{ required: true, message: 'Please select the expected harvest date' }]}
                         >
                             <Input type="date" />
                         </Form.Item>
 
-                        <Form.Item label="Field Image">
-                            <Upload
-                                listType="picture-card"
-                                fileList={fileList}
-                                onChange={handleImageUpload}
-                                beforeUpload={(file) => {
-                                    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-                                    if (!isJpgOrPng) {
-                                        message.error('You can only upload JPG/PNG file!');
-                                    }
-                                    const isLt2M = file.size / 1024 / 1024 < 2;
-                                    if (!isLt2M) {
-                                        message.error('Image must smaller than 2MB!');
-                                    }
-                                    return isJpgOrPng && isLt2M;
-                                }}
-                            >
-                                {fileList.length >= 1 ? null : (
-                                    <div>
-                                        <PlusOutlined />
-                                        <div style={{ marginTop: 8 }}>Upload</div>
-                                    </div>
-                                )}
-                            </Upload>
+                        <Form.Item label="Photos">
+                            <FileUploader onFileUpload={handleFileUpload} />
+                            {upLoadedImage.length > 0 && (
+                                <div style={{ marginTop: '10px' }}>
+                                    {upLoadedImage.map((image, index) => (
+                                        <div key={index} style={{ display: 'inline-block', margin: '5px' }}>
+                                            <img src={image} alt={`Product ${index + 1}`} style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+                                            <Button type="link" onClick={() => removeImage(index)}>Remove</Button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </Form.Item>
                     </Form>
                 </div>

@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  motion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useTransform,} from "framer-motion";
 import { useRef } from "react";
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
-// import ArrowIcon from "/assets/arrow-right.svg";
 import cogImage from "../public/assets/cog.png"
 import cylinderImage from "../public/assets/cylinder.png";
 import noodleImage from "../public/assets/noodle.png";

@@ -68,22 +68,18 @@ export interface TaskInterface {
 export interface FieldInterface {
     _id?: string;
     fieldName: string;
-    cropType?: string;
-    location?: {
-        coordinates?: [number, number];
-        address?: string;
+    cropType: string;
+    location: {
+        coordinates: [number, number];
+        address: string;
     };
-    pic?: Types.ObjectId | string;
-    size?: {
+    pic: Types.ObjectId | string;
+    size: {
         value: number;
         unit: 'hectares' | 'acres' | 'square meters';
     };
-    status?: string;
-    image?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    status: string;
+    image: string;
+    plantingDate: Date;
+    harvestDate: Date;
 }
-
-export interface EditFieldInterface extends Omit<FieldInterface, 'pic' | '_id' | 'createdAt' | 'updatedAt'> {
-    pic?: string;
-  }

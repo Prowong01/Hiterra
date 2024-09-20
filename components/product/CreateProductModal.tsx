@@ -53,7 +53,7 @@ const AddNewProduct: React.FC<AddNewProductProps> = ({ visible, onCancel, onSave
     return (
         <>
             <Modal
-                visible={visible}
+                open={visible}
                 title="Add New Product"
                 onCancel={handleCancel}
                 onOk={handleSave}
