@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button } from 'antd';
 import { UserInterface } from '../../constants/types';
+import { PlusOutlined } from '@ant-design/icons';
 
 interface AddNewUserProps {
     onSave: (user: UserInterface) => Promise<any>;
@@ -30,7 +31,7 @@ const AddNewUser: React.FC<AddNewUserProps> = ({ onSave }) => {
 
     return (
         <>
-            <Button onClick={showModal} type="primary" style={{ marginBottom: 12 }}>Add new user</Button>
+            <Button icon={<PlusOutlined />} onClick={showModal} type="primary" style={{ marginBottom: 12 }}>Add new user</Button>
             <Modal
                 title="Add new user"
                 open={isModalVisible}

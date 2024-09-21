@@ -29,7 +29,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">My Progress</h2>
+        <h2 className="text-xl font-semibold">Task Progress</h2>
         <Select
           value={period}
           onChange={onPeriodChange}
@@ -57,7 +57,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
             type="circle"
             percent={inProgressPercent}
             strokeColor="#1890ff"
-            trailColor="transparent"
+            trailColor="#f0f0f0"
             width={160}
             format={() => ''}
             className="absolute top-5 left-5"
@@ -68,7 +68,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
             type="circle"
             percent={notStartedPercent}
             strokeColor="#ff4d4f"
-            trailColor="transparent"
+            trailColor="#f0f0f0"
             width={120}
             format={() => ''}
             className="absolute top-10 left-10"

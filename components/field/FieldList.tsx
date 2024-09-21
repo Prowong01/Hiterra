@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Select, Card, Row, Col, Pagination, Spin, message } from 'antd';
-import { EnvironmentOutlined, EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, EditOutlined, EyeOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { FieldInterface } from '../../constants/types';
 
 import FieldFormModal from './FieldFormModal';
@@ -100,7 +100,6 @@ const FieldList: React.FC<FieldListProps> = ({
                 setFields(fields.filter(field => field._id !== fieldToDelete.id));
                 setFilteredFields(filteredFields.filter(field => field._id !== fieldToDelete.id));
             } catch (error) {
-                console.error('Failed to delete field:', error);
                 message.error('Failed to delete field. Please try again.');
             }
         }
@@ -122,7 +121,7 @@ const FieldList: React.FC<FieldListProps> = ({
         <div>
             <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>
                 <Col>
-                    <Button onClick={() => { setIsModalVisible(true); setModalMode('add'); }}>Add New Field</Button>
+                    <Button type="primary" onClick={() => { setIsModalVisible(true); setModalMode('add'); }}>Add New Field</Button>
                     <FieldFormModal
                         visible={isModalVisible}
                         onCancel={() => setIsModalVisible(false)}

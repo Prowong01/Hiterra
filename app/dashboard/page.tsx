@@ -2,16 +2,16 @@
 
 import React, { useState } from 'react';
 import { Card, Row, Col } from 'antd';
-import { CheckCircleOutlined, TrophyOutlined, TeamOutlined } from '@ant-design/icons';
+import { TeamOutlined, GoldOutlined, SnippetsOutlined, AppstoreOutlined, CaretUpOutlined } from '@ant-design/icons';
 import StatCard from '../../components/dashboard/StatCard';
 import ProgressChart from '../../components/dashboard/ProgressChart';
+import TrendingProducts from '../../components/dashboard/TrendingProducts';
 
 const DashboardPage: React.FC = () => {
   const [period, setPeriod] = useState<'Daily' | 'Weekly' | 'Monthly'>('Weekly');
 
   const handlePeriodChange = (value: 'Daily' | 'Weekly' | 'Monthly') => {
     setPeriod(value);
-    // You might want to fetch new data based on the selected period
     // fetchProgressData(value);
   };
 
@@ -29,18 +29,17 @@ const DashboardPage: React.FC = () => {
               <StatCard icon={<TeamOutlined />} title="Total Users" value={18} color="yellow-500" />
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <StatCard icon={<CheckCircleOutlined />} title="Total Fields" value={97} color="green-500" />
+              <StatCard icon={<AppstoreOutlined />} title="Total Fields" value={97} color="green-500" />
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <StatCard icon={<TrophyOutlined />} title="Total Tasks" value={62} color="blue-500" />
+              <StatCard icon={<SnippetsOutlined />} title="Total Tasks" value={62} color="blue-500" />
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <StatCard icon={<TeamOutlined />} title="Total Products" value={245} color="purple-500" />
+              <StatCard icon={<GoldOutlined />} title="Total Products" value={245} color="purple-500" />
             </Col>
 
             {/* Progress Chart */}
             <Col xs={24} md={12}>
-              <Card title="Task Progress">
                 <ProgressChart
                   completed={progressData.completed}
                   inProgress={progressData.inProgress}
@@ -49,22 +48,21 @@ const DashboardPage: React.FC = () => {
                   period={period}
                   onPeriodChange={handlePeriodChange}
                 />
-              </Card>
             </Col>
 
-            {/* Study Statistics */}
             <Col xs={24} md={12}>
-              {/* <Card title="Study Statistics">
-                <StudyHeatmap />
-              </Card> */}
+            <Card 
+              title={
+                <span>
+                  <CaretUpOutlined style={{ color: '#ff4d4f', marginRight: 8 }} />
+                  Trending Products
+                  <TrendingProducts />
+                </span>
+              }
+            >
+            </Card>
             </Col>
 
-            {/* Upcoming Exams */}
-            <Col xs={24}>
-              {/* <Card title="Upcoming Exams">
-                <UpcomingExams />
-              </Card> */}
-            </Col>
           </Row>
         </div>
     );

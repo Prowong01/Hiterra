@@ -6,7 +6,6 @@ import { EyeOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-
 import { TablePaginationConfig } from 'antd/es/table';
 import { FilterValue } from 'antd/es/table/interface';
 import dayjs from 'dayjs';
-import Highlighter from 'react-highlight-words';
 
 import { TaskTableCellProps } from '../../constants/types';
 import { TaskInterface } from '../../constants/types';
