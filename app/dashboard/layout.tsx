@@ -14,10 +14,13 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { UserButton } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
 
 const { Header, Sider, Content } = Layout;
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const pathname = usePathname();
+    const isDashboard = pathname === '/dashboard';
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -31,9 +34,10 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 collapsed={collapsed}
                 theme="light"
                 style={{
-                    background: '#ffffff',
+                    backgroundColor: 'rgb(244 244 245)',
                     borderRight: '1px solid #f0f0f0'
                 }}
+                className='bg-zinc-100'
             >
                 <div style={{
                     height: '64px',
@@ -56,7 +60,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 <Menu
                     mode="inline"
                     defaultSelectedKeys={['1']}
-                    style={{ border: 'none' }}
+                    style={{ border: 'none', backgroundColor: 'rgb(244 244 245)' }}
                     items={[
                         {
                             key: '1',
@@ -118,11 +122,13 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <Layout>
                 <Header style={{
                     padding: 0,
-                    background: colorBgContainer,
+                    // background: colorBgContainer,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
-                }}>
+                }}
+                    className='bg-zinc-100'
+                >
                     <Button
                         type="text"
                         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -138,11 +144,11 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 </Header>
                 <Content
                     style={{
-                        margin: '24px 16px',
-                        padding: 24,
+                        // margin: '24px 16px',
+                        padding: 18,
                         minHeight: 280,
-                        background: colorBgContainer,
                         borderRadius: borderRadiusLG,
+                        ...(isDashboard ? {} : { background: colorBgContainer }),
                     }}
                 >
                     {children}
